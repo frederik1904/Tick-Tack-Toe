@@ -38,5 +38,4 @@ public interface Board {
      * sets the board to it's initial state
      */
     void resetBoard();
-
 }
