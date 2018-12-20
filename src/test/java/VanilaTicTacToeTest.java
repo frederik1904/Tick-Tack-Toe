@@ -17,22 +17,25 @@ public class VanilaTicTacToeTest {
     }
 
     @Test
-    public void CrossShouldStartWithTheTurn() {
+    public void crossShouldStartWithTheTurn() {
         assertThat(board.getPlayerInTurn(), is(Unit.CROSS));
     }
 
-
+    @Test
+    public void afterEndOfTurnThePlayerInTurnShouldBeCircle() {
+        board.endTurn();
+        assertThat(board.getPlayerInTurn(), is(Unit.CIRCLE));
+    }
 
     @Test
     public void middleShouldReturnTrueWhenNothingIsMarked() {
-        assertThat(board.markField(new Position(1,1)), is(true));
+        assertThat(placeUnit(1,1), is(true));
     }
 
     @Test
     public void middleShouldReturnFalseWhenItIsAlreadyMarked() {
-        Position pos = new Position(1,1);
-        board.markField(pos);
-        assertThat(board.markField(pos), is(false));
+        placeUnit(1,1);
+        assertThat(placeUnit(1,1), is(false));
     }
 
     @Test
@@ -42,6 +45,39 @@ public class VanilaTicTacToeTest {
         assertThat(board.getUnit(pos), is(Unit.CROSS));
     }
 
+    @Test
+    public void whenCirclePlacesMarkItShouldBeMarkedCircle() {
+        board.endTurn();
+        placeUnit(1,1);
+        assertThat(board.getUnit(new Position(1,1)), is(Unit.CIRCLE));
+    }
 
+    @Test
+    public void whenSomeOneMarksSuccessfullyPlayerInTurnShouldChange() {
+        assertThat(placeUnit(1,1), is(true));
+        assertThat(board.getPlayerInTurn(), is(Unit.CIRCLE));
+    }
 
+    @Test
+    public void thereShouldBeNoWinnerAtTheStart() {
+        assertThat(board.getWinner(), is(Unit.NONE));
+    }
+
+    @Test
+    public void whenOnePlayerHas102030() {
+        assertThat(placeUnit(0,0), is(true));
+        assertThat(placeUnit(0,1), is(true));
+        assertThat(board.getWinner(), is(Unit.NONE));
+        assertThat(placeUnit(1,0), is(true));
+        assertThat(placeUnit(1,1), is(true));
+        assertThat(board.getWinner(), is(Unit.NONE));
+        assertThat(placeUnit(2,0), is(true));
+        assertThat(board.getWinner(), is(Unit.CROSS));
+        assertThat(placeUnit(2,1), is(false));
+    }
+
+    //Util methods
+    private boolean placeUnit(int r, int c) {
+        return board.markField(new Position(r,c));
+    }
 }
