@@ -1,17 +1,23 @@
 package standard;
 
-import Framework.GameConstants;
-import Framework.Position;
-import Framework.Unit;
+import Framework.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import static Framework.GameConstants.BOARD_SIZE;
 import static Framework.Unit.*;
 
-public class BoardImpl implements Framework.Board {
+public class BoardImpl implements Framework.Board, Observable {
     private HashMap<Position, Unit> unitMap = new HashMap<>();
     private Unit unitInTurn = CROSS;
     private Unit winner = NONE;
+    private PlayerStrategy playerStrategy;
+    private ArrayList<Observer> observers = new ArrayList<>();
+
+    public BoardImpl(PlayerStrategy playerStrategy) {
+        this.playerStrategy = playerStrategy;
+    }
 
     @Override
     public Unit getUnit(Position pos) {
@@ -35,29 +41,36 @@ public class BoardImpl implements Framework.Board {
     }
 
     private void isGameWon(Position pos) {
+        System.out.println(pos);
         int row = pos.getRow(), col = pos.getColumn(),
                 rowUnits = 0, colUnits = 0,
                 diagUnitsOne = 0, diagUnitsTwo = 0;
-        for (int i = 0; i < GameConstants.BOARD_SIZE; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             if (getUnit(new Position(i, col)) == getPlayerInTurn()) rowUnits++;
             if (getUnit(new Position(row, i)) == getPlayerInTurn()) colUnits++;
             if (getUnit(new Position(i, i)) == getPlayerInTurn()) diagUnitsOne++;
-            if (getUnit(new Position(GameConstants.BOARD_SIZE - 1 - i, GameConstants.BOARD_SIZE - 1 - i)) == getPlayerInTurn()) diagUnitsTwo++;
+            if (getUnit(new Position(BOARD_SIZE - 1 - i, BOARD_SIZE - 1 - i)) == getPlayerInTurn()) diagUnitsTwo++;
         }
 
-        if (rowUnits == GameConstants.BOARD_SIZE
-                || colUnits == GameConstants.BOARD_SIZE
-                || diagUnitsOne == GameConstants.BOARD_SIZE
-                || diagUnitsTwo == GameConstants.BOARD_SIZE) {
+        if (rowUnits == BOARD_SIZE
+                || colUnits == BOARD_SIZE
+                || diagUnitsOne == BOARD_SIZE
+                || diagUnitsTwo == BOARD_SIZE) {
             winner = getPlayerInTurn();
-        } else if (unitMap.keySet().size() == GameConstants.BOARD_SIZE * GameConstants.BOARD_SIZE) {
+        } else if (unitMap.keySet().size() == BOARD_SIZE * BOARD_SIZE) {
             winner = TIE;
         }
     }
 
     @Override
     public void endTurn() {
-        unitInTurn = unitInTurn.equals(CROSS) ? CIRCLE : CROSS;
+        if (getPlayerInTurn().equals(CROSS)) {
+            unitInTurn = CIRCLE;
+            playerStrategy.makePlay(this);
+        } else {
+            unitInTurn = CROSS;
+        }
+        notifyUpdate();
     }
 
     @Override
@@ -73,5 +86,20 @@ public class BoardImpl implements Framework.Board {
     @Override
     public void resetBoard() {
         unitMap.clear();
+    }
+
+    @Override
+    public void attatch(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void detatch(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyUpdate() {
+        observers.forEach(Observer::update);
     }
 }
