@@ -5,6 +5,7 @@ import Framework.Unit;
 import org.junit.Before;
 import org.junit.Test;
 import standard.BoardImpl;
+import standard.PlayerStrategyNone;
 
 import static Framework.Unit.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -16,7 +17,7 @@ public class VanilaTicTacToeTest {
 
     @Before
     public void setUp() {
-        board = new BoardImpl();
+        board = new BoardImpl(new PlayerStrategyNone());
     }
 
     @Test
@@ -119,6 +120,18 @@ public class VanilaTicTacToeTest {
         assertThat(board.getWinner(), is(NONE));
         assertThat(placeUnit(2,0), is(true));
         assertThat(board.getWinner(), is(TIE));
+    }
+
+    @Test
+    public void whenOnePlayerHas021120DiagonalVidtory() {
+        assertThat(placeUnit(0,2), is(true));
+        assertThat(placeUnit(1,0), is(true));
+        assertThat(board.getWinner(), is(NONE));
+        assertThat(placeUnit(1,1), is(true));
+        assertThat(placeUnit(1,2), is(true));
+        assertThat(board.getWinner(), is(NONE));
+        assertThat(placeUnit(2,0), is(true));
+        assertThat(board.getWinner(), is(CROSS));
     }
 
     @Test

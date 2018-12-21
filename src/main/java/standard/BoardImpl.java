@@ -49,7 +49,7 @@ public class BoardImpl implements Framework.Board, Observable {
             if (getUnit(new Position(i, col)) == getPlayerInTurn()) rowUnits++;
             if (getUnit(new Position(row, i)) == getPlayerInTurn()) colUnits++;
             if (getUnit(new Position(i, i)) == getPlayerInTurn()) diagUnitsOne++;
-            if (getUnit(new Position(BOARD_SIZE - 1 - i, BOARD_SIZE - 1 - i)) == getPlayerInTurn()) diagUnitsTwo++;
+            if (getUnit(new Position(i, BOARD_SIZE - 1 - i)) == getPlayerInTurn()) diagUnitsTwo++;
         }
 
         if (rowUnits == BOARD_SIZE

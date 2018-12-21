@@ -25,7 +25,7 @@ public class PlayerStrategyAI implements PlayerStrategy {
 
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                calculatePoints(i,j,board);
+                calculatePoints(i, j, board);
             }
         }
 
@@ -63,6 +63,7 @@ public class PlayerStrategyAI implements PlayerStrategy {
         if (board.getUnit(new Position(row, col)) != null) {
             return;
         }
+
         int points = 0;
         int enemyRow = 0, enemyCol = 0, friendlyRow = 0, friendlyCol = 0;
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -80,8 +81,39 @@ public class PlayerStrategyAI implements PlayerStrategy {
 
         if (friendlyRow == BOARD_SIZE - 1) winnerPos.add(new Position(row, col));
         if (friendlyCol == BOARD_SIZE - 1) winnerPos.add(new Position(row, col));
+        if (enemyCol == BOARD_SIZE - 1 || enemyRow == BOARD_SIZE - 1) loserPos.add(new Position(row, col));
 
-        if (enemyCol == BOARD_SIZE - 1 || enemyRow == BOARD_SIZE - 1) loserPos.add(new Position(row,col));
+        int diagFriendly = 0, diagEnemy = 0;
+        if (row == col) {
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                Unit boardUnit = board.getUnit(new Position(i, i));
+                if (!Objects.equals(boardUnit, board.getPlayerInTurn()) && boardUnit != null) diagEnemy++;
+                if (Objects.equals(boardUnit, board.getPlayerInTurn())) diagFriendly++;
+            }
+
+
+            if (diagEnemy == 0) points++;
+            if (diagFriendly == BOARD_SIZE - 1) winnerPos.add(new Position(row, col));
+            if (diagEnemy == BOARD_SIZE - 1) loserPos.add(new Position(row, col));
+        }
+
+        if (col == BOARD_SIZE - 1 - row) {
+            diagFriendly = 0;
+            diagEnemy = 0;
+
+            System.out.println("ROW: " + row + " COL: " + col);
+            for (int i = 0; i < BOARD_SIZE; i++) {
+                Unit boardUnit = board.getUnit(new Position(i, BOARD_SIZE - 1 - i));
+                if (!Objects.equals(boardUnit, board.getPlayerInTurn()) && boardUnit != null) diagEnemy++;
+                if (Objects.equals(boardUnit, board.getPlayerInTurn())) diagFriendly++;
+            }
+
+
+            if (diagEnemy == 0) points++;
+            if (diagFriendly == BOARD_SIZE - 1) winnerPos.add(new Position(row, col));
+            if (diagEnemy == BOARD_SIZE - 1) loserPos.add(new Position(row, col));
+        }
+
         pointMap.put(new Position(row, col), points);
     }
 }
