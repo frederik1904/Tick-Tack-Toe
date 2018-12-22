@@ -12,11 +12,12 @@ public class BoardImpl implements Framework.Board, Observable {
     private HashMap<Position, Unit> unitMap = new HashMap<>();
     private Unit unitInTurn = CROSS;
     private Unit winner = NONE;
-    private PlayerStrategy playerStrategy;
+    private PlayerStrategy playerStrategy1, playerStrategy2;
     private ArrayList<Observer> observers = new ArrayList<>();
 
-    public BoardImpl(PlayerStrategy playerStrategy) {
-        this.playerStrategy = playerStrategy;
+    public BoardImpl(PlayerStrategy playerStrategy1, PlayerStrategy playerStrategy2) {
+        this.playerStrategy1 = playerStrategy1;
+        this.playerStrategy2 = playerStrategy2;
     }
 
     @Override
@@ -64,13 +65,16 @@ public class BoardImpl implements Framework.Board, Observable {
 
     @Override
     public void endTurn() {
+        notifyUpdate();
+        Thread.yield();
+
         if (getPlayerInTurn().equals(CROSS)) {
             unitInTurn = CIRCLE;
-            playerStrategy.makePlay(this);
+            playerStrategy1.makePlay(this);
         } else {
             unitInTurn = CROSS;
+            playerStrategy2.makePlay(this);
         }
-        notifyUpdate();
     }
 
     @Override

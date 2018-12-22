@@ -12,7 +12,7 @@ import java.util.Stack;
 
 import static Framework.GameConstants.BOARD_SIZE;
 
-public class PlayerStrategyAI implements PlayerStrategy {
+public class PlayerStrategyAIAggressiveSimple implements PlayerStrategy {
     private Stack<Position> winnerPos;
     private Stack<Position> loserPos;
     private Map<Position, Integer> pointMap = new HashMap<>();

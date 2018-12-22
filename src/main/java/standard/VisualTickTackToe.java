@@ -22,11 +22,14 @@ public class VisualTickTackToe implements Observer {
 
     private Board board;
     public VisualTickTackToe() {
-        board = new BoardImpl(new PlayerStrategyAI());
+        board = new BoardImpl(new PlayerStrategyNone(), new PlayerStrategyNone());
         buttons = new HashMap<>();
         ((BoardImpl) board).attatch(this);
     }
 
+    public Board getBoard() {
+        return board;
+    }
 
     public void setUpBoard() {
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -49,6 +52,8 @@ public class VisualTickTackToe implements Observer {
             }
             boxLayout.getChildren().add(hBox);
         }
+
+        board.endTurn();
     }
 
     private String getStringOfField(Position pos) {

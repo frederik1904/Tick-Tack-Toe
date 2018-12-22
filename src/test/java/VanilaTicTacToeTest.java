@@ -17,7 +17,7 @@ public class VanilaTicTacToeTest {
 
     @Before
     public void setUp() {
-        board = new BoardImpl(new PlayerStrategyNone());
+        board = new BoardImpl(new PlayerStrategyNone(), new PlayerStrategyNone());
     }
 
     @Test
