@@ -1,6 +1,8 @@
 package standard;
 
 import Framework.*;
+import Framework.playerStrategy.PlayerStrategy;
+import standard.moveUnitStrategy.MoveUnitStrayegyTickTackToe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +14,15 @@ public class BoardImpl implements Framework.Board, Observable {
     private HashMap<Position, Unit> unitMap = new HashMap<>();
     private Unit unitInTurn = CROSS;
     private Unit winner = NONE;
-    private PlayerStrategy playerStrategy1, playerStrategy2;
     private ArrayList<Observer> observers = new ArrayList<>();
+    private PlayerStrategy playerOne, playerTwo;
+    private MoveUnitStrayegy moveUnitStrayegy;
 
-    public BoardImpl(PlayerStrategy playerStrategy1, PlayerStrategy playerStrategy2) {
-        this.playerStrategy1 = playerStrategy1;
-        this.playerStrategy2 = playerStrategy2;
+
+    public BoardImpl(PlayerStrategy playerOne, PlayerStrategy playerTwo) {
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
+        this.moveUnitStrayegy = new MoveUnitStrayegyTickTackToe();
     }
 
     @Override
@@ -27,22 +32,24 @@ public class BoardImpl implements Framework.Board, Observable {
 
     @Override
     public boolean markField(Position pos) {
-        if (!getWinner().equals(NONE)) {
-            return false;
-        }
-        if (getUnit(pos) != null) {
-            return false;
-        }
-        unitMap.put(pos, getPlayerInTurn());
+        boolean canBePlaced = moveUnitStrayegy.canPlaceUnit(pos, this);
+        if(canBePlaced) {
+            unitMap.put(pos, getPlayerInTurn());
 
-        isGameWon(pos);
+            isGameWon(pos);
 
-        endTurn();
-        return true;
+            endTurn();
+        }
+
+        return canBePlaced;
+    }
+
+    @Override
+    public boolean moveField(Position from, Position to) {
+        return moveUnitStrayegy.canMoveUnit(from, to, this);
     }
 
     private void isGameWon(Position pos) {
-        System.out.println(pos);
         int row = pos.getRow(), col = pos.getColumn(),
                 rowUnits = 0, colUnits = 0,
                 diagUnitsOne = 0, diagUnitsTwo = 0;
@@ -70,10 +77,10 @@ public class BoardImpl implements Framework.Board, Observable {
 
         if (getPlayerInTurn().equals(CROSS)) {
             unitInTurn = CIRCLE;
-            playerStrategy1.makePlay(this);
+            playerOne.makePlay(this);
         } else {
             unitInTurn = CROSS;
-            playerStrategy2.makePlay(this);
+            playerTwo.makePlay(this);
         }
     }
 
@@ -90,15 +97,17 @@ public class BoardImpl implements Framework.Board, Observable {
     @Override
     public void resetBoard() {
         unitMap.clear();
+        winner = NONE;
+        unitInTurn = CIRCLE;
     }
 
     @Override
-    public void attatch(Observer o) {
+    public void attach(Observer o) {
         observers.add(o);
     }
 
     @Override
-    public void detatch(Observer o) {
+    public void detach(Observer o) {
         observers.remove(o);
     }
 

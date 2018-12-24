@@ -1,4 +1,6 @@
-package Framework;
+package Framework.playerStrategy;
+
+import Framework.Board;
 
 public interface PlayerStrategy {
 

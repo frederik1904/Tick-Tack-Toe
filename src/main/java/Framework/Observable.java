@@ -1,7 +1,7 @@
 package Framework;
 
 public interface Observable {
-    void attatch(Observer o);
-    void detatch(Observer o);
+    void attach(Observer o);
+    void detach(Observer o);
     void notifyUpdate();
 }

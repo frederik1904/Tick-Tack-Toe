@@ -5,7 +5,7 @@ import Framework.Unit;
 import org.junit.Before;
 import org.junit.Test;
 import standard.BoardImpl;
-import standard.PlayerStrategyNone;
+import standard.playerStrategy.PlayerStrategyNone;
 
 import static Framework.Unit.*;
 import static org.hamcrest.CoreMatchers.is;

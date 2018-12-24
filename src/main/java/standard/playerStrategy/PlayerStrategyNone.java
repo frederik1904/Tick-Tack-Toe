@@ -1,7 +1,7 @@
-package standard;
+package standard.playerStrategy;
 
 import Framework.Board;
-import Framework.PlayerStrategy;
+import Framework.playerStrategy.PlayerStrategy;
 
 public class PlayerStrategyNone implements PlayerStrategy {
     @Override

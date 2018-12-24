@@ -12,9 +12,17 @@ public interface Board {
      * Used to mark a field for the current user, if there is already another piece it returns false,
      * else true. it is a precondition that the piece is within the bounds.
      * @param pos The position to mark
-     * @return weather  the marking went well or not
+     * @return weather the marking went well or not
      */
     boolean markField(Position pos);
+
+    /**
+     * Used to move a field from one place to another
+     * @param from the position to move from
+     * @param to the position to move to
+     * @return weather the marking went well or not
+     */
+    boolean moveField(Position from, Position to);
 
     /**
      * Ends the turn and prompts the ai to take its turn
