@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import standard.playerStrategy.PlayerStrategyAIAggressiveSimple;
+import standard.playerStrategy.PlayerStrategyBotSimple;
 import standard.playerStrategy.PlayerStrategyNone;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class VisualTickTackToe implements Observer {
 
     private Board board;
     public VisualTickTackToe() {
-        board = new BoardImpl(new PlayerStrategyNone(), new PlayerStrategyAIAggressiveSimple());
+        board = new BoardImpl(new PlayerStrategyNone(), new PlayerStrategyBotSimple());
         buttons = new HashMap<>();
         ((BoardImpl) board).attach(this);
     }

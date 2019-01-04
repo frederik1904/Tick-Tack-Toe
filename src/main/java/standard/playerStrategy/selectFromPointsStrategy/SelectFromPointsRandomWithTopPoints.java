@@ -15,6 +15,7 @@ public class SelectFromPointsRandomWithTopPoints implements SelectFromPoints {
         int mostPoints = -1;
         for (Position pos : pointMap.keySet()) {
             int currentPoints = pointMap.get(pos);
+
             if (currentPoints > mostPoints) {
                 bestPos.clear();
                 bestPos.add(pos);
